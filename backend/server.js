@@ -146,6 +146,10 @@ app.get("/reservas", verificarToken, async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.send("🚀 Backend funcionando en Vercel!");
+});
+
 // 🚀 Iniciar el servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
