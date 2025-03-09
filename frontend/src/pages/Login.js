@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = "https://backend-3bys28lr7-haiderandres1369-gmailcoms-projects.vercel.app"; // URL del backend en Vercel
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,8 +11,15 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Verificar que los campos no estén vacíos
+    if (!email || !password) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -19,15 +28,15 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem("token", data.token); // Guarda el token
+        localStorage.setItem("token", data.token); // Guarda el token en el almacenamiento local
         alert("Inicio de sesión exitoso!");
         navigate("/reservas"); // Redirige a la página de reservas
       } else {
-        alert("Error: " + data.error);
+        alert("Error: " + (data.error || "Credenciales incorrectas"));
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
-      alert("No se pudo conectar al servidor.");
+      alert("No se pudo conectar al servidor. Inténtalo de nuevo más tarde.");
     }
   };
 

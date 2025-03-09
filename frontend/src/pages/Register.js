@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 
+const API_URL = "https://backend-3bys28lr7-haiderandres1369-gmailcoms-projects.vercel.app"; // URL del backend en Vercel
+
 function Register() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
@@ -8,16 +10,30 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/usuarios", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, email, password }),
-    });
-    const data = await response.json();
-    if (data.id) {
-      alert("Registro exitoso!");
-    } else {
-      alert("Error: " + data.error);
+
+    // Validaciones básicas antes de enviar la solicitud
+    if (!nombre || !email || !password) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/usuarios`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Registro exitoso! Ahora puedes iniciar sesión.");
+      } else {
+        alert("Error: " + (data.error || "No se pudo registrar el usuario."));
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+      alert("No se pudo conectar al servidor. Inténtalo de nuevo más tarde.");
     }
   };
 
