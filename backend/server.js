@@ -146,6 +146,8 @@ app.get("/reservas", verificarToken, async (req, res) => {
   }
 });
 
+
+//pruebas
 app.get("/", (req, res) => {
   res.send("🚀 Backend funcionando en Vercel!");
 });
